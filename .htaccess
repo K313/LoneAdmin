@@ -1,0 +1,6 @@
+
+ErrorDocument 300 /LoneAdmin/index.php
+ErrorDocument 404 /LoneAdmin/index.php
+
+LimitRequestBody 1000
+LimitXMLRequestBody 1
