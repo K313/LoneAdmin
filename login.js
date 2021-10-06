@@ -1,26 +1,32 @@
 
-(function(){
-  function dw(s) { document.write(s); }
+(function()
+{
   
-  dw('<div style="text-align:center;">');
-  dw('<form action="." method="POST" style="border:solid 1px #aaa; margin:1em; padding:1em; display:inline-block; text-align:left;">');
+  function gid(id) { return document.getElementById(id); }
+  function gtn(tn) { return document.getElementsByTagName(tn); }
   
-  dw('<div style="margin:1em .5em .2em 1em;">login key:</div><input name="logkey" />');
-  dw('<div style="margin:1em .5em .2em 1em; color:#a00;">login:</div><input name="logval" />');
+  var xhrArr = [ ];
+  function xhrLoad( ) { alert(this); }
+  function xhrError( ) {  }
+  function xhrProgress( ) {  }
+  function req(cmd, onresp)
+  {
+    var len = xhrArr.length;
+    if (! len) {
+      var xr = new XMLHttpRequest( );
+      xr.open('POST', 'index.php', true);
+      xr.onload = xhrLoad;
+      xr.onerror = xhrError;
+      xr.onprogress = xhrProgress;
+      xhrArr.shift(xr);
+      xr.send(cmd);
+    }
+    else xhrArr.push([cmd, onresp]);
+  }
   
-  dw('<div style="margin:1em .5em .2em 1em;">password key:</div><input name="passkey" />');
-  dw('<div style="margin:1em .5em .2em 1em; color:#a00;">password:</div><input name="passval" />');
+  //req('aaa');
   
-  dw('<div style="margin:1em .5em .2em 1em;">tocken key:</div><input name="tockkey" />');
-  dw('<div style="margin:1em .5em .2em 1em; color:#a00;">tocken:</div><input name="tockval" />');
-  
-  dw('<div style="margin:1em .5em .2em 1em;">submit key:</div><input name="subkey" />');
-  dw('<div style="margin: 1em;text-align:center;"><input type="submit" name="subval" value="Build form" /></div>');
-  
-  dw('</form>');
-  dw('</div>');
 })();
-
 
 
 
