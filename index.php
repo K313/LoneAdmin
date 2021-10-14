@@ -34,6 +34,8 @@ $err = k313_loneAdmin(
   'loneSession.php'
 );
 
+
+
 if (! error_reporting( )) $err = 0;
 
 //json_encode - (PHP 5 >= 5.2.0, PECL json:1.2.0-1.2.1)
