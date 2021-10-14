@@ -2,20 +2,42 @@
 
 ob_start( );
 
-error_reporting(0);
-//ini_set('display_errors', '1');
+error_reporting(1);
+ini_set('display_errors', 1);
 
-require_once __DIR__.'/.ht_loneAdmin_7ej29swa';
+require_once dirname(__FILE__).'/loneAdmin.php';
 
-if (false === k313_loneAdmin(
-  array ('logas', 'passas', 'cookas', 'cmdas'),
-  '$2y$10$VeqMtvbSli.jG1SDd5C1WeqzbQLGe7vPqEDQg3XYYL1PgOJbaaGKi',
+$err = k313_loneAdmin(
+  array (
+    'login-keys' => array ('login', 'password', 'tocken', 'send'),
+    'session-name' => 'cookey',
+    'command-key' => 'cmdkey',
+    
+    'session-method' => 'sessmeth', // 'cookie|post|get|javascript'
+    'session-expire' => 'sessexp',
+    'session-path' => 'sesspath',
+    'session-domain' => 'sessdom',
+    'session-secure' => 'sesssec',
+    'session-httponly' => 'honly',
+    
+    'lone-salt' => '$ww8/.d?fr@A',
+    'login-filters' => array ('ip' => '127.0.0.1|23.99.106.*'),
+    'lone-login-func' => '',
+    'lone-session-func' => '',
+    'lone-login-location' => '.',
+    'lone-config-ini' => 'loneConfig.ini'
+  ),
+  '', // '$2y$10$zWsj2.IJYQvpgaM.Y6BWROijupr0gGJpElw.LG9kV8Vz34jOvWE5K',
   
-  '.ht_sess_file_sh749fjf7485',
-  '.ht_log_include_8wz488ei2qa',
-  '.ht_sess_include_o8uw5qm1p'
-))
-  echo '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>Lone Admin</title></head>',
-  '<body><script type="application/javascript" src="login.js"></script></body></html>';
+  'loneSave.txt',
+  'loneLogin.php',
+  'loneSession.php'
+);
 
+if (! error_reporting( )) $err = 0;
 
+//json_encode - (PHP 5 >= 5.2.0, PECL json:1.2.0-1.2.1)
+//if (count($_POST)) echo json_encode(array ('logged' => false, 'function' => 'k313_loneAdmin', 'error' => $err));
+if (count($_POST)) echo '{"logged":false, "function":"k313_loneAdmin", "error":"',$err,'"}';
+else echo '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>Lone Admin</title></head>',
+  '<body><script type="application/javascript" src="loneLogin.js"></script></body></html>';
