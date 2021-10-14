@@ -34,8 +34,6 @@ $err = k313_loneAdmin(
   'loneSession.php'
 );
 
-
-
 if (! error_reporting( )) $err = 0;
 
 //json_encode - (PHP 5 >= 5.2.0, PECL json:1.2.0-1.2.1)
@@ -43,3 +41,6 @@ if (! error_reporting( )) $err = 0;
 if (count($_POST)) echo '{"logged":false, "function":"k313_loneAdmin", "error":"',$err,'"}';
 else echo '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>Lone Admin</title></head>',
   '<body><script type="application/javascript" src="loneLogin.js"></script></body></html>';
+
+
+
