@@ -11,7 +11,7 @@ function k313_loneAdminInclude($incl_file, $config, $hash_or_sess, $lone_save, $
 
 function k313_loneAdmin($config, $pass_hash, $lone_save, $lone_login, $lone_sess)
 {
-  static $salt = 'w74/f sa Q@1 k%Dm1';
+  static $salt = 'w%7 b0Xx 7?8';
   
   if (define('K313_LONE_ADMIN', dirname(__FILE__).'/')) {
     $time = time( );
@@ -21,7 +21,7 @@ function k313_loneAdmin($config, $pass_hash, $lone_save, $lone_login, $lone_sess
       $loneIncl = '';
       
       // if POST login
-      if (isset ($config['login-keys'])
+      if (isset ($config['login-keys'][0], $_POST[$config['login-keys'][0]])
       && array_intersect($config['login-keys'], array_keys($_POST))) {
         if ($time - 15 > filemtime($sfile)) {
           $f = fopen($sfile, 'r+b');
@@ -61,10 +61,11 @@ function k313_loneAdmin($config, $pass_hash, $lone_save, $lone_login, $lone_sess
       
       // check login or session
       if ($loneIncl) {
-        $k = end($loneIncl);
-        if (isset ($config[$k]) && ! $config[$k]) $allfuncs = get_defined_functions( );
-        $func = call_user_func_array('k313_loneAdminInclude', $loneIncl);
-        if (isset ($config[$k])) {
+        $key = end($loneIncl);
+        $iskey = isset ($config[$key]);
+        if ($iskey && ! $config[$key]) $allfuncs = get_defined_functions( );
+        $funcName = call_user_func_array('k313_loneAdminInclude', $loneIncl);
+        if ($iskey) {
           if (isset ($allfuncs)) {
             if (isset ($allfuncs['user'])) {
               $count = count($allfuncs['user']);
@@ -74,21 +75,24 @@ function k313_loneAdmin($config, $pass_hash, $lone_save, $lone_login, $lone_sess
             }
             else return 11;
           }
-          else $funcName = $config[$k];
+          else $funcName = $config[$key];
         }
-        else $funcName = $func;
         
         if (is_callable($funcName, false, $func)) {
           array_shift($loneIncl);
           return call_user_func_array($func, $loneIncl);
         }
-        else return 13;
+        else return '13 - '.$key.' = '.$funcName;
       }
       else return 3;
     }
-    else return 2;
+    else return '2 - '.$sfile;
   }
   else return 1;
 }
 
 return 313;
+
+
+
+
